@@ -13,8 +13,8 @@
       "default": "./src/client.ts"
     },
     "./schema": {
-      "types": "./dist/schemas.d.ts",
-      "default": "./src/schemas.ts"
+      "types": "./dist/schemas/index.d.ts",
+      "default": "./src/schemas/index.ts"
     }
   },
   "license": "MIT",

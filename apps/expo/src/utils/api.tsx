@@ -2,7 +2,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
-import superjson from "superjson";
+import { parse, stringify } from "devalue";
 
 import type { AppRouter } from "@acme/api";
 
@@ -31,7 +31,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
           colorMode: "ansi",
         }),
         httpBatchLink({
-          transformer: superjson,
+          transformer: { serialize: stringify, deserialize: parse },
           url: `${getBaseUrl()}/api/trpc`,
           headers() {
             const headers = new Map<string, string>();

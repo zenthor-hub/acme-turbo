@@ -1,4 +1,5 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+
 import { protectedProcedure, publicProcedure } from "../trpc";
 
 export const authRouter = {

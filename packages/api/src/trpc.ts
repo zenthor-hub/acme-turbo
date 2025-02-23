@@ -7,10 +7,11 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
+import { parse, stringify } from "devalue";
 import { ZodError } from "zod";
-import { db } from "@acme/db/client";
+
 import { auth } from "@acme/auth";
+import { db } from "@acme/db/client";
 
 /**
  * 1. CONTEXT
@@ -24,16 +25,9 @@ import { auth } from "@acme/auth";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: {
-  headers: Headers;
-}) => {
-  const session = await auth.api.getSession({
-    headers: opts.headers,
-  })
-  return {
-    session,
-    db,
-  };
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const session = await auth.api.getSession({ headers: opts.headers });
+  return { session, db };
 };
 
 /**
@@ -43,7 +37,7 @@ export const createTRPCContext = async (opts: {
  * transformer
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
+  transformer: { serialize: stringify, deserialize: parse },
   errorFormatter: ({ shape, error }) => ({
     ...shape,
     data: {
